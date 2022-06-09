@@ -1,0 +1,170 @@
+///Data Grid
+
+<DataGrid x:Name="dataGrid1" Height="356" Margin="20,20,20,0" Background="White" IsReadOnly="True" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="auto"/>
+                    <DataGridTextColumn Header="№ билета" Binding="{Binding Номер_билета}" Width="auto"/>
+                    <DataGridTextColumn Header="Оценка" Binding="{Binding Оценка}" Width="auto"/>
+                    <DataGridTemplateColumn Width="auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image x:Name="imageEdit" Source="edit.png" Width="15" Height="15" MouseLeftButtonDown="imageEdit_MouseLeftButtonDown"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+///Удаление данных
+
+       private void buttonDel_Click(object sender, RoutedEventArgs e)
+        {
+            var ТестированиеИСForRemoving = dataGrid1.SelectedItems.Cast<ТестированиеИС>().ToList();
+
+            if (MessageBox.Show($"Вы точно хотите удалить следующие {ТестированиеИСForRemoving.Count()} элементов?", "Внимание",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    ExamSessionEntities.GetContext().ТестированиеИС.RemoveRange(ТестированиеИСForRemoving);
+                    ExamSessionEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Данные удалены!");
+
+                    dataGrid1.ItemsSource = ExamSessionEntities.GetContext().ТестированиеИС.ToList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
+            }
+        }
+
+///Изменение данных
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            dataGrid1.ItemsSource = ExamSessionEntities.GetContext().ТестированиеИС.ToList();
+        }
+
+///Context.cs
+
+ private static ExamSessionEntities _context;
+
+        public ExamSessionEntities()
+            : base("name=ExamSessionEntities")
+        {
+        }
+        public static ExamSessionEntities GetContext()
+        {
+            if (_context == null)
+                _context = new ExamSessionEntities();
+
+            return _context;
+        }
+
+///Лист открыть
+
+MyFrame.Content = new ISP31();
+
+///Добавить данные
+
+private РазработкаИС _currentIS = new РазработкаИС();
+
+        public windowAdd(РазработкаИС selectedразработкаИС)
+        {
+            InitializeComponent();
+
+            if (selectedразработкаИС != null)
+                _currentIS = selectedразработкаИС;
+
+            DataContext = _currentIS;
+        }
+
+private void buttonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder errors = new StringBuilder();
+
+            if (_currentIS.ФИО == null)
+            {
+                errors.AppendLine("Укажите ФИО");
+            }    
+            if(_currentIS.Оценка == null)
+            {
+
+            }
+            else
+            {
+                if (_currentIS.Оценка == 2 || _currentIS.Оценка == 3 || _currentIS.Оценка == 4 || _currentIS.Оценка == 5)
+                {
+                    
+                }
+                else
+                {
+                    errors.AppendLine("Оценка ставится по 5-бальной системе");
+                }
+            }
+
+
+            if (errors.Length > 0)
+            {
+                MessageBox.Show(errors.ToString());
+                return;
+            }
+
+            if (_currentIS.ID == 0)
+                ExamSessionEntities.GetContext().РазработкаИС.Add(_currentIS);
+            try
+            {
+                ExamSessionEntities.GetContext().SaveChanges();
+                MessageBox.Show("Информация добавлена!");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+///Писать только цифры
+
+        private void textBoxTricket_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0))
+            {
+                e.Handled = true;
+            }
+        }
+
+///Отображение данных в DataGrid
+
+        public RazrabotkaIS()
+        {
+            InitializeComponent();
+            dataGrid1.ItemsSource = ExamSessionEntities.GetContext().РазработкаИС.ToList();
+        }
+
+///Git
+
+git init
+git add .
+git commit -m "First commit"
+git remote add origin https://github.com/user/repo.git
+git push origin master
+
+///
+void CaptchaGenerator()  // метод генерации капчи 
+        {
+            char[] chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789".ToCharArray();
+            string randomString = "";
+            Random ran = new Random();
+            for (int i = 0; i < 5; i++)
+            {
+                randomString += chars[ran.Next(0, chars.Length)];
+            }
+            gencapchaBox.Text = randomString;
+        }
+
+///
+
+startap location
+
